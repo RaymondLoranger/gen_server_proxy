@@ -14,16 +14,32 @@ defmodule GenServer.Proxy do
     end
   end
 
-  @doc """
+  @doc ~S'''
   Performs a GenServer call.
   Will wait a bit if the server is not yet registered on restarts.
 
   ## Examples
 
+      # Assuming the following callback module:
+
+      defmodule GenServer.Proxy.Callback do
+        @behaviour GenServer.Proxy.Behaviour
+
+        @impl GenServer.Proxy.Behaviour
+        def server_name(game_name),
+          do: {:via, Registry, {:registry, game_name}}
+
+        @impl GenServer.Proxy.Behaviour
+        def server_unregistered(game_name),
+          do: IO.puts("Game #{game_name} not started.")
+      end
+
+      # We could use the `call` macro like so:
+
       use GenServer.Proxy
 
       def summary(game_name), do: call(:summary, game_name)
-  """
+  '''
   defmacro call(request, server_id, module \\ __MODULE__.Callback) do
     quote do:
             GenServer.Proxy.Call.call(
