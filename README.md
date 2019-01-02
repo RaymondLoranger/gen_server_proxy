@@ -1,6 +1,6 @@
 # GenServer Proxy
 
-Performs a GenServer call or stop.
+Performs a GenServer call, cast or stop.
 
 Will wait a bit if the server is not yet registered on restarts.
 
