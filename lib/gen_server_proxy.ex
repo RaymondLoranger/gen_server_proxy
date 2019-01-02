@@ -6,6 +6,30 @@ defmodule GenServer.Proxy do
     end
   end
 
+  @doc """
+  Performs a GenServer call.
+  Will wait a bit if the server is not yet registered on restarts.
+
+  ## Examples
+
+      @behaviour GenServer.Proxy.User
+
+      use GenServer.Proxy
+
+      alias Buzzword.Bingo.Engine.{GameNotStarted, Server}
+
+      @impl GenServer.Proxy.User
+      def server_name(game_name), do: Server.via(game_name)
+
+      @impl GenServer.Proxy.User
+      def server_unregistered(game_name) do
+        game_name |> GameNotStarted.message() |> IO.puts()
+      end
+
+      def summary(game_name) do
+        Proxy.call(:summary, game_name)
+      end
+  """
   defmacro call(request, server_id, module \\ nil) do
     quote do
       module = if unquote(module), do: unquote(module), else: __MODULE__

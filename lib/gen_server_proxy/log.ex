@@ -1,6 +1,14 @@
 defmodule GenServer.Proxy.Log do
   use File.Only.Logger
 
+  error :exit, {reason} do
+    """
+    \n`exit` caught...
+    • Reason:
+    #{inspect(reason)}
+    """
+  end
+
   warn :remains_unregistered, {server_id, timeout, times, reason} do
     """
     \nServer #{inspect(server_id)} remains unregistered after:
