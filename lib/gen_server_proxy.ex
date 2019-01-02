@@ -1,8 +1,16 @@
 defmodule GenServer.Proxy do
-  defmacro __using__(_options) do
-    quote do
-      require unquote(__MODULE__)
-      alias unquote(__MODULE__)
+  defmacro __using__(options) do
+    alias = options[:alias]
+
+    if alias do
+      quote do
+        alias unquote(__MODULE__), as: unquote(alias)
+        require unquote(alias)
+      end
+    else
+      quote do
+        import unquote(__MODULE__)
+      end
     end
   end
 
@@ -12,35 +20,34 @@ defmodule GenServer.Proxy do
 
   ## Examples
 
-      @behaviour GenServer.Proxy.User
-
       use GenServer.Proxy
 
-      alias Buzzword.Bingo.Engine.{GameNotStarted, Server}
-
-      @impl GenServer.Proxy.User
-      def server_name(game_name), do: Server.via(game_name)
-
-      @impl GenServer.Proxy.User
-      def server_unregistered(game_name) do
-        game_name |> GameNotStarted.message() |> IO.puts()
-      end
-
-      def summary(game_name) do
-        Proxy.call(:summary, game_name)
-      end
+      def summary(game_name), do: call(:summary, game_name)
   """
-  defmacro call(request, server_id, module \\ nil) do
-    quote do
-      module = if unquote(module), do: unquote(module), else: __MODULE__
-      GenServer.Proxy.Agent.call(unquote(request), unquote(server_id), module)
-    end
+  defmacro call(request, server_id, module \\ __MODULE__.Callback) do
+    quote do:
+            GenServer.Proxy.Call.call(
+              unquote(request),
+              unquote(server_id),
+              unquote(module)
+            )
   end
 
-  defmacro stop(reason, server_id, module \\ nil) do
-    quote do
-      module = if unquote(module), do: unquote(module), else: __MODULE__
-      GenServer.Proxy.Agent.stop(unquote(reason), unquote(server_id), module)
-    end
+  defmacro cast(request, server_id, module \\ __MODULE__.Callback) do
+    quote do:
+            GenServer.Proxy.Cast.cast(
+              unquote(request),
+              unquote(server_id),
+              unquote(module)
+            )
+  end
+
+  defmacro stop(request, server_id, module \\ __MODULE__.Callback) do
+    quote do:
+            GenServer.Proxy.Stop.stop(
+              unquote(request),
+              unquote(server_id),
+              unquote(module)
+            )
   end
 end
