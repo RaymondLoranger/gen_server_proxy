@@ -34,7 +34,7 @@ defmodule GenServer.Proxy do
           do: IO.puts("Game #{game_name} not started.")
       end
 
-      # We could use the `call` macro like so:
+      # We could use the call macro like so:
 
       use GenServer.Proxy
 
