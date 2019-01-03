@@ -14,7 +14,8 @@ defmodule GenServer.Proxy.Log do
     \nServer #{inspect(server_id)} remains unregistered after:
     • Waiting: #{timeout} ms
     • Times: #{times}
-    • Reason: #{inspect(reason)}
+    • Reason:
+    #{inspect(reason)}
     """
   end
 
@@ -23,7 +24,8 @@ defmodule GenServer.Proxy.Log do
     \nServer #{inspect(server_id)} still unregistered:
     • Waiting: #{timeout} ms
     • Times left: #{times_left}
-    • Reason: #{inspect(reason)}
+    • Reason:
+    #{inspect(reason)}
     """
   end
 
@@ -32,7 +34,8 @@ defmodule GenServer.Proxy.Log do
     \nServer #{inspect(server_id)} now registered after:
     • Waiting: #{timeout} ms
     • Times: #{times}
-    • Reason: #{inspect(reason)}
+    • Reason:
+    #{inspect(reason)}
     """
   end
 end

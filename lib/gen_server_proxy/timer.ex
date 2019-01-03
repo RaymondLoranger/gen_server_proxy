@@ -29,7 +29,7 @@ defmodule GenServer.Proxy.Timer do
         Log.info(:now_registered, {server_id, @timeout, times, reason})
 
       pid when is_pid(pid) ->
-        sleep(server_id, reason, module, times_left - 1)
+        sleep(server_id, module, reason, times_left - 1)
     end
   end
 end
