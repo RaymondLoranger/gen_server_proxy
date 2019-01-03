@@ -29,13 +29,14 @@ defmodule GenServer.Proxy.Log do
     """
   end
 
-  info :now_registered, {server_id, timeout, times, reason} do
+  info :now_registered, {server_id, timeout, times, reason, pid} do
     """
     \nServer #{inspect(server_id)} now registered after:
     • Waiting: #{timeout} ms
     • Times: #{times}
     • Reason:
     #{inspect(reason)}
+    • PID: #{inspect(pid)}
     """
   end
 end

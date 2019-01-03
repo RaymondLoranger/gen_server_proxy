@@ -26,7 +26,7 @@ defmodule GenServer.Proxy.Timer do
     case server_id |> module.server_name() |> GenServer.whereis() do
       pid when is_pid(pid) ->
         times = @times - times_left + 1
-        Log.info(:now_registered, {server_id, @timeout, times, reason})
+        Log.info(:now_registered, {server_id, @timeout, times, reason, pid})
 
       nil ->
         sleep(server_id, module, reason, times_left - 1)
