@@ -3,7 +3,7 @@ defmodule GenServer.Proxy.Log do
 
   error :exit, {reason} do
     """
-    \n`exit` caught...
+    \n'exit' caught:
     • Reason:
     #{inspect(reason)}
     """
