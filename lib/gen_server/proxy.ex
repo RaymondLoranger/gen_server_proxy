@@ -17,7 +17,8 @@ defmodule GenServer.Proxy do
   @doc ~S'''
   Performs a GenServer call.
   Will wait a bit if the server is not yet registered on restarts.
-  The default callback `module` is `<caller's module>.Callback`.
+  A `module` to implement the 2 callbacks of GenServer.Proxy.Behaviour
+  is required and the default name is <caller's module>.Callback.
 
   ## Examples
 
@@ -35,7 +36,7 @@ defmodule GenServer.Proxy do
           do: IO.puts("Game #{game_name} not started.")
       end
 
-      # We could use the 'call' macro like so:
+      # We could use the call macro like so:
 
       defmodule Game.Engine do
         use GenServer.Proxy
