@@ -6,14 +6,14 @@ defmodule GenServer.Proxy.Cast do
     server_id |> module.server_name() |> GenServer.cast(request)
   catch
     :exit, reason ->
-      Log.error(:exit, {reason})
+      Log.error(:exit, {server_id, reason})
       Timer.sleep(server_id, module, reason)
 
       try do
         server_id |> module.server_name() |> GenServer.cast(request)
       catch
         :exit, reason ->
-          Log.error(:exit, {reason})
+          Log.error(:exit, {server_id, reason})
           module.server_unregistered(server_id)
           :ok
       end
