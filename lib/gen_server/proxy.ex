@@ -18,7 +18,7 @@ defmodule GenServer.Proxy do
   Performs a GenServer call.
   Will wait a bit if the server is not yet registered on restarts.
   A `module` to implement the 2 callbacks of `GenServer.Proxy.Behaviour`
-  is required and its default name is _<caller's module>_.Callback.
+  is required and its default name is `<caller's module>.Callback`.
 
   ## Examples
 
