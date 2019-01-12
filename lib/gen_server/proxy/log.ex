@@ -1,6 +1,5 @@
 defmodule GenServer.Proxy.Log do
   use File.Only.Logger
-  use PersistConfig
 
   error :exit, {server, reason} do
     """
@@ -9,8 +8,8 @@ defmodule GenServer.Proxy.Log do
       #{inspect(server, pretty: true)}
     • Reason:
       #{inspect(reason, pretty: true)}
-    • App: #{Mix.Project.config()[:app]}
-    • Library: #{@app}
+    • App: #{:application.get_application() |> elem(1)}
+    • Library: #{Application.get_application(__MODULE__)}
     • Module: #{inspect(__MODULE__)}
     """
   end
@@ -24,8 +23,8 @@ defmodule GenServer.Proxy.Log do
     • Times: #{times}
     • Reason:
       #{inspect(reason, pretty: true)}
-    • App: #{Mix.Project.config()[:app]}
-    • Library: #{@app}
+    • App: #{:application.get_application() |> elem(1)}
+    • Library: #{Application.get_application(__MODULE__)}
     • Module: #{inspect(__MODULE__)}
     """
   end
@@ -39,8 +38,8 @@ defmodule GenServer.Proxy.Log do
     • Times left: #{times_left}
     • Reason:
       #{inspect(reason, pretty: true)}
-    • App: #{Mix.Project.config()[:app]}
-    • Library: #{@app}
+    • App: #{:application.get_application() |> elem(1)}
+    • Library: #{Application.get_application(__MODULE__)}
     • Module: #{inspect(__MODULE__)}
     """
   end
@@ -54,9 +53,9 @@ defmodule GenServer.Proxy.Log do
     • Times: #{times}
     • Reason:
       #{inspect(reason, pretty: true)}
-    • PID: #{inspect(pid, pretty: true)}
-    • App: #{Mix.Project.config()[:app]}
-    • Library: #{@app}
+    • Server PID: #{inspect(pid, pretty: true)}
+    • App: #{:application.get_application() |> elem(1)}
+    • Library: #{Application.get_application(__MODULE__)}
     • Module: #{inspect(__MODULE__)}
     """
   end
