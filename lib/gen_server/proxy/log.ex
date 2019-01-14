@@ -1,5 +1,6 @@
 defmodule GenServer.Proxy.Log do
   use File.Only.Logger
+  use PersistConfig
 
   error :exit, {server, reason} do
     """
@@ -8,8 +9,8 @@ defmodule GenServer.Proxy.Log do
       #{inspect(server, pretty: true)}
     • Reason:
       #{inspect(reason, pretty: true)}
-    • App: #{:application.get_application() |> elem(1)}
-    • Library: #{Application.get_application(__MODULE__)}
+    • App: #{Mix.Project.config()[:app]}
+    • Library: #{@app}
     • Module: #{inspect(__MODULE__)}
     """
   end
@@ -23,8 +24,8 @@ defmodule GenServer.Proxy.Log do
     • Times: #{times}
     • Reason:
       #{inspect(reason, pretty: true)}
-    • App: #{:application.get_application() |> elem(1)}
-    • Library: #{Application.get_application(__MODULE__)}
+    • App: #{Mix.Project.config()[:app]}
+    • Library: #{@app}
     • Module: #{inspect(__MODULE__)}
     """
   end
@@ -38,8 +39,8 @@ defmodule GenServer.Proxy.Log do
     • Times left: #{times_left}
     • Reason:
       #{inspect(reason, pretty: true)}
-    • App: #{:application.get_application() |> elem(1)}
-    • Library: #{Application.get_application(__MODULE__)}
+    • App: #{Mix.Project.config()[:app]}
+    • Library: #{@app}
     • Module: #{inspect(__MODULE__)}
     """
   end
@@ -49,13 +50,13 @@ defmodule GenServer.Proxy.Log do
     \nServer now registered...
     • Server:
       #{inspect(server, pretty: true)}
+    • Server PID: #{inspect(pid, pretty: true)}
     • Waited: #{timeout} ms
     • Times: #{times}
     • Reason:
       #{inspect(reason, pretty: true)}
-    • Server PID: #{inspect(pid, pretty: true)}
-    • App: #{:application.get_application() |> elem(1)}
-    • Library: #{Application.get_application(__MODULE__)}
+    • App: #{Mix.Project.config()[:app]}
+    • Library: #{@app}
     • Module: #{inspect(__MODULE__)}
     """
   end
