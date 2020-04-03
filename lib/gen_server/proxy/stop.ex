@@ -18,7 +18,7 @@ defmodule GenServer.Proxy.Stop do
           :exit, exit_reason ->
             Log.error(:exit, {server, exit_reason})
             module.server_unregistered(server_id)
-            :ok
+            {:error, reason}
         end
     end
   end

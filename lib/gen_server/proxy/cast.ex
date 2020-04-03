@@ -18,7 +18,7 @@ defmodule GenServer.Proxy.Cast do
           :exit, reason ->
             Log.error(:exit, {server, reason})
             module.server_unregistered(server_id)
-            :ok
+            {:error, reason}
         end
     end
   end
