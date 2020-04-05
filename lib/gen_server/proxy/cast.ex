@@ -1,7 +1,7 @@
 defmodule GenServer.Proxy.Cast do
   alias GenServer.Proxy.{Log, Timer}
 
-  @spec cast(term, term, module) :: :ok
+  @spec cast(term, term, module) :: :ok | {:error, term}
   def cast(request, server_id, module) do
     server = module.server_name(server_id)
 

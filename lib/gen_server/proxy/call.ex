@@ -1,7 +1,7 @@
 defmodule GenServer.Proxy.Call do
   alias GenServer.Proxy.{Log, Timer}
 
-  @spec call(term, term, module) :: term | :ok
+  @spec call(term, term, module) :: term | {:error, term}
   def call(request, server_id, module) do
     server = module.server_name(server_id)
 
