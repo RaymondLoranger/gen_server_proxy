@@ -48,11 +48,11 @@ defmodule GenServer.Proxy do
   defmacro call(request, server_id, module \\ nil) do
     if module do
       quote bind_quoted: [request: request, server_id: server_id] do
-        GenServer.Proxy.Call.call(request, server_id, unquote(module))
+        GenServer.Proxy.Caller.call(request, server_id, unquote(module))
       end
     else
       quote bind_quoted: [request: request, server_id: server_id] do
-        GenServer.Proxy.Call.call(request, server_id, __MODULE__.Callback)
+        GenServer.Proxy.Caller.call(request, server_id, __MODULE__.Callback)
       end
     end
   end
@@ -60,11 +60,11 @@ defmodule GenServer.Proxy do
   defmacro cast(request, server_id, module \\ nil) do
     if module do
       quote bind_quoted: [request: request, server_id: server_id] do
-        GenServer.Proxy.Cast.cast(request, server_id, unquote(module))
+        GenServer.Proxy.Caster.cast(request, server_id, unquote(module))
       end
     else
       quote bind_quoted: [request: request, server_id: server_id] do
-        GenServer.Proxy.Cast.cast(request, server_id, __MODULE__.Callback)
+        GenServer.Proxy.Caster.cast(request, server_id, __MODULE__.Callback)
       end
     end
   end
@@ -72,11 +72,11 @@ defmodule GenServer.Proxy do
   defmacro stop(reason, server_id, module \\ nil) do
     if module do
       quote bind_quoted: [reason: reason, server_id: server_id] do
-        GenServer.Proxy.Stop.stop(reason, server_id, unquote(module))
+        GenServer.Proxy.Stopper.stop(reason, server_id, unquote(module))
       end
     else
       quote bind_quoted: [reason: reason, server_id: server_id] do
-        GenServer.Proxy.Stop.stop(reason, server_id, __MODULE__.Callback)
+        GenServer.Proxy.Stopper.stop(reason, server_id, __MODULE__.Callback)
       end
     end
   end

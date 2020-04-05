@@ -1,4 +1,4 @@
-defmodule GenServer.Proxy.Stop do
+defmodule GenServer.Proxy.Stopper do
   alias GenServer.Proxy.{Log, Timer}
 
   @spec stop(term, term, module) :: :ok | {:error, term}

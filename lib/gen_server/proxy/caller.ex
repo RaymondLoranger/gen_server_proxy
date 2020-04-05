@@ -1,19 +1,19 @@
-defmodule GenServer.Proxy.Cast do
+defmodule GenServer.Proxy.Caller do
   alias GenServer.Proxy.{Log, Timer}
 
-  @spec cast(term, term, module) :: :ok | {:error, term}
-  def cast(request, server_id, module) do
+  @spec call(term, term, module) :: term | {:error, term}
+  def call(request, server_id, module) do
     server = module.server_name(server_id)
 
     try do
-      GenServer.cast(server, request)
+      GenServer.call(server, request)
     catch
       :exit, reason ->
         Log.error(:exit, {server, reason})
         Timer.sleep(server, reason)
 
         try do
-          GenServer.cast(server, request)
+          GenServer.call(server, request)
         catch
           :exit, reason ->
             Log.error(:exit, {server, reason})
