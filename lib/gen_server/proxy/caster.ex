@@ -10,7 +10,7 @@ defmodule GenServer.Proxy.Caster do
     catch
       :exit, reason ->
         :ok = Log.error(:exit, {server, reason, __ENV__})
-        Timer.sleep(server, reason)
+        Timer.wait(server, reason)
 
         try do
           GenServer.cast(server, request)

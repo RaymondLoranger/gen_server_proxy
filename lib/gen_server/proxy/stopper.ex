@@ -10,7 +10,7 @@ defmodule GenServer.Proxy.Stopper do
     catch
       :exit, exit_reason ->
         :ok = Log.error(:exit, {server, exit_reason, __ENV__})
-        Timer.sleep(server, exit_reason)
+        Timer.wait(server, exit_reason)
 
         try do
           GenServer.stop(server, reason)

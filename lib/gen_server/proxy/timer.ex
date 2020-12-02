@@ -6,19 +6,19 @@ defmodule GenServer.Proxy.Timer do
   @timeout get_env(:timeout)
   @times get_env(:times)
 
-  @spec sleep(GenServer.name(), term) :: :ok
-  def sleep(server, reason), do: sleep(server, reason, @times)
+  @spec wait(GenServer.name(), term) :: :ok
+  def wait(server, reason), do: wait(server, reason, @times)
 
   ## Private functions
 
   # On restarts, wait if server not yet registered...
-  @spec sleep(GenServer.name(), term, non_neg_integer) :: :ok
-  defp sleep(server, reason, 0) do
+  @spec wait(GenServer.name(), term, non_neg_integer) :: :ok
+  defp wait(server, reason, 0) do
     remains_unregistered_vars = {server, @timeout, @times, reason, __ENV__}
     :ok = Log.warn(:remains_unregistered, remains_unregistered_vars)
   end
 
-  defp sleep(server, reason, times_left) do
+  defp wait(server, reason, times_left) do
     still_unregistered_vars = {server, @timeout, times_left, reason, __ENV__}
     :ok = Log.info(:still_unregistered, still_unregistered_vars)
     Process.sleep(@timeout)
@@ -30,7 +30,7 @@ defmodule GenServer.Proxy.Timer do
         :ok = Log.info(:now_registered, now_registered_vars)
 
       nil ->
-        sleep(server, reason, times_left - 1)
+        wait(server, reason, times_left - 1)
     end
   end
 end

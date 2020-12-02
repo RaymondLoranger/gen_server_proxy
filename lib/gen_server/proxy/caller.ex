@@ -10,7 +10,7 @@ defmodule GenServer.Proxy.Caller do
     catch
       :exit, reason ->
         :ok = Log.error(:exit, {server, reason, __ENV__})
-        Timer.sleep(server, reason)
+        Timer.wait(server, reason)
 
         try do
           GenServer.call(server, request)
