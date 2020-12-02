@@ -9,14 +9,14 @@ defmodule GenServer.Proxy.Stopper do
       GenServer.stop(server, reason)
     catch
       :exit, exit_reason ->
-        Log.error(:exit, {server, exit_reason})
+        :ok = Log.error(:exit, {server, exit_reason, __ENV__})
         Timer.sleep(server, exit_reason)
 
         try do
           GenServer.stop(server, reason)
         catch
           :exit, exit_reason ->
-            Log.error(:exit, {server, exit_reason})
+            :ok = Log.error(:exit, {server, exit_reason, __ENV__})
             module.server_unregistered(server_id)
             {:error, reason}
         end

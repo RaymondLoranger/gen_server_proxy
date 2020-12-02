@@ -1,53 +1,61 @@
 defmodule GenServer.Proxy.Log do
   use File.Only.Logger
 
-  error :exit, {server, reason} do
+  error :exit, {server, reason, env} do
     """
     \n'exit' caught...
+    • Inside function:
+      #{fun(env)}
     • Server:
-      #{inspect(server, pretty: true)}
+      #{inspect(server)}
     • Reason:
-      #{inspect(reason, pretty: true)}
+      #{inspect(reason)}
     #{from()}
     """
   end
 
-  warn :remains_unregistered, {server, timeout, times, reason} do
+  warn :remains_unregistered, {server, timeout, times, reason, env} do
     """
     \nServer remains unregistered...
+    • Inside function:
+      #{fun(env)}
     • Server:
-      #{inspect(server, pretty: true)}
+      #{inspect(server)}
     • Waited: #{timeout} ms
     • Times: #{times}
     • Reason:
-      #{inspect(reason, pretty: true)}
+      #{inspect(reason)}
     #{from()}
     """
   end
 
-  info :still_unregistered, {server, timeout, times_left, reason} do
+  info :still_unregistered, {server, timeout, times_left, reason, env} do
     """
     \nServer still unregistered...
+    • Inside function:
+      #{fun(env)}
     • Server:
-      #{inspect(server, pretty: true)}
+      #{inspect(server)}
     • Waiting: #{timeout} ms
     • Times left: #{times_left}
     • Reason:
-      #{inspect(reason, pretty: true)}
+      #{inspect(reason)}
     #{from()}
     """
   end
 
-  info :now_registered, {server, timeout, times, reason, pid} do
+  info :now_registered, {server, timeout, times, reason, pid, env} do
     """
     \nServer now registered...
+    • Inside function:
+      #{fun(env)}
     • Server:
-      #{inspect(server, pretty: true)}
-    • Server PID: #{inspect(pid, pretty: true)}
+      #{inspect(server)}
+    • Server PID: #{inspect(pid)}
     • Waited: #{timeout} ms
     • Times: #{times}
     • Reason:
-      #{inspect(reason, pretty: true)}
+      #{inspect(reason)}
     #{from()}
     """
   end
