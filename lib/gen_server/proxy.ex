@@ -1,4 +1,30 @@
 defmodule GenServer.Proxy do
+  @doc """
+  Converts a `server ID` into a server name like a `via tuple`.
+
+  ## Examples
+
+      @impl GenServer.Proxy
+      def server_name(game_name),
+        do: {:via, Registry, {:registry, game_name}}
+
+      @impl GenServer.Proxy
+      def server_name(game_name),
+        do: {:global, {GameServer, game_name}}
+  """
+  @callback server_name(server_id :: term) :: GenServer.name()
+
+  @doc ~S'''
+  Called when the server remains unregistered despite waiting a bit.
+
+  ## Examples
+
+      @impl GenServer.Proxy
+      def server_unregistered(game_name),
+        do: IO.puts("Game #{game_name} not started.")
+  '''
+  @callback server_unregistered(server_id :: term) :: term
+
   defmacro __using__(options) do
     alias = options[:alias]
 
@@ -15,24 +41,24 @@ defmodule GenServer.Proxy do
   end
 
   @doc ~S'''
-  Performs a GenServer call.
+  Makes a GenServer call to a registered server given its `server ID`.
   Will wait a bit if the server is not yet registered on restarts.
 
-  The given `module` (or by default `<caller's_module>.Callback`) must
-  implement the 2 callbacks of `GenServer.Proxy.Behaviour`.
+  The given `module` (or by default `<caller's_module>.Proxy`) must
+  implement the 2 callbacks of `GenServer.Proxy` (this module).
 
   ## Examples
 
       # Assuming the following callback module:
 
-      defmodule Game.Engine.Callback do
-        @behaviour GenServer.Proxy.Behaviour
+      defmodule Game.Engine.Proxy do
+        @behaviour GenServer.Proxy
 
-        @impl GenServer.Proxy.Behaviour
+        @impl GenServer.Proxy
         def server_name(game_name),
           do: {:via, Registry, {:registry, game_name}}
 
-        @impl GenServer.Proxy.Behaviour
+        @impl GenServer.Proxy
         def server_unregistered(game_name),
           do: IO.puts("Game #{game_name} not started.")
       end
@@ -53,7 +79,7 @@ defmodule GenServer.Proxy do
       end
     else
       quote bind_quoted: [request: request, id: server_id] do
-        GenServer.Proxy.Caller.call(request, id, __MODULE__.Callback)
+        GenServer.Proxy.Caller.call(request, id, __MODULE__.Proxy)
       end
     end
   end
@@ -65,7 +91,7 @@ defmodule GenServer.Proxy do
       end
     else
       quote bind_quoted: [request: request, id: server_id] do
-        GenServer.Proxy.Caster.cast(request, id, __MODULE__.Callback)
+        GenServer.Proxy.Caster.cast(request, id, __MODULE__.Proxy)
       end
     end
   end
@@ -77,7 +103,7 @@ defmodule GenServer.Proxy do
       end
     else
       quote bind_quoted: [reason: reason, id: server_id] do
-        GenServer.Proxy.Stopper.stop(reason, id, __MODULE__.Callback)
+        GenServer.Proxy.Stopper.stop(reason, id, __MODULE__.Proxy)
       end
     end
   end
