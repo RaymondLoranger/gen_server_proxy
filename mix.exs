@@ -24,7 +24,6 @@ defmodule GenServer.Proxy.MixProject do
     """
     Makes a GenServer call to a registered server.
     Will wait a bit if the server is not yet registered on restarts.
-    Also supports GenServer cast and GenServer stop.
     """
   end
 
