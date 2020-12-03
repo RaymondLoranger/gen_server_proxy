@@ -31,6 +31,19 @@ defmodule GenServer.Proxy do
   '''
   @callback server_unregistered(server_id :: term) :: term
 
+  @doc """
+  Either aliases `GenServer.Proxy` (this module) and requires the alias or
+  imports `GenServer.Proxy`. In the latter case, you could instead simply
+  `import GenServer.Proxy`.
+
+  ## Examples
+
+      use GenServer.Proxy, alias: Proxy
+
+      use GenServer.Proxy
+
+      import GenServer.Proxy
+  """
   defmacro __using__(options) do
     alias = options[:alias]
 
