@@ -1,4 +1,10 @@
 defmodule GenServer.Proxy do
+  @moduledoc """
+  Makes a GenServer call to a registered server.
+  Will wait a bit if the server is not yet registered on restarts.
+  Also supports GenServer cast and GenServer stop.
+  """
+
   @doc """
   Converts a `server ID` into a server name like a `via tuple`.
 
