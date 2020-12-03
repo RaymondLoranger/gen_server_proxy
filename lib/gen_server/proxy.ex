@@ -1,8 +1,7 @@
 defmodule GenServer.Proxy do
   @moduledoc """
-  Makes a GenServer call to a registered server.
+  Invokes `call`, `cast` or `stop` in `GenServer` using a registered server.
   Will wait a bit if the server is not yet registered on restarts.
-  Also supports GenServer cast and GenServer stop.
   """
 
   @doc """
@@ -60,7 +59,7 @@ defmodule GenServer.Proxy do
   end
 
   @doc ~S'''
-  Makes a GenServer call to a registered server given its `server ID`.
+  Makes a synchronous call to the registered GenServer given its `server ID`.
   Will wait a bit if the server is not yet registered on restarts.
 
   The given `module` (or by default `<caller's_module>.Proxy`) must
@@ -103,6 +102,10 @@ defmodule GenServer.Proxy do
     end
   end
 
+  @doc """
+  Sends an async request to the registered GenServer given its `server ID`.
+  Will wait a bit if the server is not yet registered on restarts.
+  """
   defmacro cast(request, server_id, module \\ nil) do
     if module do
       quote bind_quoted: [request: request, id: server_id, module: module] do
@@ -115,6 +118,10 @@ defmodule GenServer.Proxy do
     end
   end
 
+  @doc """
+  Synchronously stops the registered GenServer given its `server ID`.
+  Will wait a bit if the server is not yet registered on restarts.
+  """
   defmacro stop(reason, server_id, module \\ nil) do
     if module do
       quote bind_quoted: [reason: reason, id: server_id, module: module] do

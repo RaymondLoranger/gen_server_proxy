@@ -22,7 +22,7 @@ defmodule GenServer.Proxy.MixProject do
 
   defp description do
     """
-    Makes a GenServer call to a registered server.
+    Invokes `call`, `cast` or `stop` in `GenServer` using a registered server.
     Will wait a bit if the server is not yet registered on restarts.
     """
   end

@@ -1,8 +1,7 @@
 # GenServer Proxy
 
-Makes a GenServer call to a registered server.
+Invokes `call`, `cast` or `stop` in `GenServer` using a registered server.
 Will wait a bit if the server is not yet registered on restarts.
-Also supports GenServer cast and GenServer stop.
 
 ## Installation
 
