@@ -105,6 +105,9 @@ defmodule GenServer.Proxy do
   @doc """
   Sends an async request to the registered GenServer given its `server ID`.
   Will wait a bit if the server is not yet registered on restarts.
+
+  The given `module` (or by default `<caller's_module>.Proxy`) must
+  implement the 2 callbacks of `GenServer.Proxy` (this module).
   """
   defmacro cast(request, server_id, module \\ nil) do
     if module do
@@ -121,6 +124,9 @@ defmodule GenServer.Proxy do
   @doc """
   Synchronously stops the registered GenServer given its `server ID`.
   Will wait a bit if the server is not yet registered on restarts.
+
+  The given `module` (or by default `<caller's_module>.Proxy`) must
+  implement the 2 callbacks of `GenServer.Proxy` (this module).
   """
   defmacro stop(reason, server_id, module \\ nil) do
     if module do
