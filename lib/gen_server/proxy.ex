@@ -62,7 +62,7 @@ defmodule GenServer.Proxy do
   Makes a synchronous call to the registered GenServer given its `server ID`.
   Will wait a bit if the server is not yet registered on restarts.
 
-  The given `module` (or by default `<caller's_module>.Proxy`) must
+  The given `module` (or by default `<caller's_module>.GenServerProxy`) must
   implement the 2 callbacks of `GenServer.Proxy` (this module).
 
   ## Examples
@@ -97,7 +97,7 @@ defmodule GenServer.Proxy do
       end
     else
       quote bind_quoted: [request: request, id: server_id] do
-        GenServer.Proxy.Caller.call(request, id, __MODULE__.Proxy)
+        GenServer.Proxy.Caller.call(request, id, __MODULE__.GenServerProxy)
       end
     end
   end
@@ -106,7 +106,7 @@ defmodule GenServer.Proxy do
   Sends an async request to the registered GenServer given its `server ID`.
   Will wait a bit if the server is not yet registered on restarts.
 
-  The given `module` (or by default `<caller's_module>.Proxy`) must
+  The given `module` (or by default `<caller's_module>.GenServerProxy`) must
   implement the 2 callbacks of `GenServer.Proxy` (this module).
   """
   defmacro cast(request, server_id, module \\ nil) do
@@ -116,7 +116,7 @@ defmodule GenServer.Proxy do
       end
     else
       quote bind_quoted: [request: request, id: server_id] do
-        GenServer.Proxy.Caster.cast(request, id, __MODULE__.Proxy)
+        GenServer.Proxy.Caster.cast(request, id, __MODULE__.GenServerProxy)
       end
     end
   end
@@ -125,7 +125,7 @@ defmodule GenServer.Proxy do
   Synchronously stops the registered GenServer given its `server ID`.
   Will wait a bit if the server is not yet registered on restarts.
 
-  The given `module` (or by default `<caller's_module>.Proxy`) must
+  The given `module` (or by default `<caller's_module>.GenServerProxy`) must
   implement the 2 callbacks of `GenServer.Proxy` (this module).
   """
   defmacro stop(reason, server_id, module \\ nil) do
@@ -135,7 +135,7 @@ defmodule GenServer.Proxy do
       end
     else
       quote bind_quoted: [reason: reason, id: server_id] do
-        GenServer.Proxy.Stopper.stop(reason, id, __MODULE__.Proxy)
+        GenServer.Proxy.Stopper.stop(reason, id, __MODULE__.GenServerProxy)
       end
     end
   end
