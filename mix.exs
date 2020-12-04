@@ -4,7 +4,7 @@ defmodule GenServer.Proxy.MixProject do
   def project do
     [
       app: :gen_server_proxy,
-      version: "0.1.21",
+      version: "0.1.22",
       elixir: "~> 1.11",
       start_permanent: Mix.env() == :prod,
       name: "GenServer Proxy",
@@ -22,7 +22,7 @@ defmodule GenServer.Proxy.MixProject do
 
   defp description do
     """
-    Invokes call, cast or stop in GenServer using a registered server.
+    Invokes call, cast or stop in GenServer with a registered server.
     Will wait a bit if the server is not yet registered on restarts.
     """
   end

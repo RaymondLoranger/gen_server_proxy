@@ -1,11 +1,11 @@
 defmodule GenServer.Proxy do
   @moduledoc """
-  Invokes `call`, `cast` or `stop` in `GenServer` using a registered server.
+  Invokes `call`, `cast` or `stop` in `GenServer` with a registered server.
   Will wait a bit if the server is not yet registered on restarts.
   """
 
   @doc """
-  Converts a `server ID` into a server name like a `via tuple`.
+  Converts `server_id` into a server name like a `via tuple`.
 
   ## Examples
 
@@ -59,7 +59,7 @@ defmodule GenServer.Proxy do
   end
 
   @doc ~S'''
-  Makes a synchronous call to the registered GenServer given its `server ID`.
+  Makes a synchronous call to the registered server identified by `server_id`.
   Will wait a bit if the server is not yet registered on restarts.
 
   The given `module` (or by default `<caller's_module>.GenServerProxy`) must
@@ -69,7 +69,7 @@ defmodule GenServer.Proxy do
 
       # Assuming the following callback module:
 
-      defmodule Game.Engine.Proxy do
+      defmodule Game.Engine.GenServerProxy do
         @behaviour GenServer.Proxy
 
         @impl GenServer.Proxy
@@ -103,7 +103,7 @@ defmodule GenServer.Proxy do
   end
 
   @doc """
-  Sends an async request to the registered GenServer given its `server ID`.
+  Sends an async request to the registered server identified by `server_id`.
   Will wait a bit if the server is not yet registered on restarts.
 
   The given `module` (or by default `<caller's_module>.GenServerProxy`) must
@@ -122,7 +122,7 @@ defmodule GenServer.Proxy do
   end
 
   @doc """
-  Synchronously stops the registered GenServer given its `server ID`.
+  Synchronously stops the registered server identified by `server_id`.
   Will wait a bit if the server is not yet registered on restarts.
 
   The given `module` (or by default `<caller's_module>.GenServerProxy`) must
