@@ -14,21 +14,6 @@ defmodule GenServer.Proxy.Log do
     """
   end
 
-  warn :remains_unregistered, {server, timeout, times, reason, env} do
-    """
-    \nServer remains unregistered...
-    • Inside function:
-      #{fun(env)}
-    • Server:
-      #{inspect(server)}
-    • Waited: #{timeout} ms
-    • Times: #{times}
-    • Reason:
-      #{inspect(reason)}
-    #{from()}
-    """
-  end
-
   info :still_unregistered, {server, timeout, times_left, reason, env} do
     """
     \nServer still unregistered...
@@ -38,7 +23,22 @@ defmodule GenServer.Proxy.Log do
       #{inspect(server)}
     • Waiting: #{timeout} ms
     • Times left: #{times_left}
-    • Reason:
+    • Issue:
+      #{inspect(reason)}
+    #{from()}
+    """
+  end
+
+  warn :remains_unregistered, {server, timeout, times, reason, env} do
+    """
+    \nServer remains unregistered...
+    • Inside function:
+      #{fun(env)}
+    • Server:
+      #{inspect(server)}
+    • Waited: #{timeout} ms
+    • Times: #{times}
+    • Unresolved issue:
       #{inspect(reason)}
     #{from()}
     """
@@ -54,7 +54,7 @@ defmodule GenServer.Proxy.Log do
     • Server PID: #{inspect(pid)}
     • Waited: #{timeout} ms
     • Times: #{times}
-    • Reason:
+    • Resolved issue:
       #{inspect(reason)}
     #{from()}
     """
