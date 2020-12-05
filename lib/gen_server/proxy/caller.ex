@@ -1,5 +1,10 @@
 defmodule GenServer.Proxy.Caller do
+  use PersistConfig
+
   alias GenServer.Proxy.{Log, Timer}
+
+  @timeout get_env(:timeout)
+  @times get_env(:times)
 
   @spec call(term, term, module) :: term | {:error, term}
   def call(request, server_id, module) do
@@ -9,14 +14,15 @@ defmodule GenServer.Proxy.Caller do
       GenServer.call(server, request)
     catch
       :exit, reason ->
-        :ok = Log.error(:exit, {server, reason, __ENV__})
+        not_registered = {server, @timeout, @times, reason, __ENV__}
+        :ok = Log.error(:not_registered, not_registered)
         Timer.wait(server, reason)
 
         try do
           GenServer.call(server, request)
         catch
           :exit, reason ->
-            :ok = Log.error(:exit, {server, reason, __ENV__})
+            :ok = Log.error(:not_registered, {server, reason, __ENV__})
             module.server_unregistered(server_id)
             {:error, reason}
         end

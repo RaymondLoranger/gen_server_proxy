@@ -1,9 +1,9 @@
 defmodule GenServer.Proxy.Log do
   use File.Only.Logger
 
-  error :exit, {server, reason, env} do
+  error :not_registered, {server, reason, env} do
     """
-    \n'exit' caught...
+    \nServer not registered...
     • Inside function:
       #{fun(env)}
     • Server:
@@ -14,24 +14,39 @@ defmodule GenServer.Proxy.Log do
     """
   end
 
-  info :still_unregistered, {server, timeout, times_left, reason, env} do
+  error :not_registered, {server, timeout, times, reason, env} do
     """
-    \nServer still unregistered...
+    \nServer not registered...
     • Inside function:
       #{fun(env)}
     • Server:
       #{inspect(server)}
     • Waiting: #{timeout} ms
-    • Times left: #{times_left}
-    • Issue:
+    • Times: #{times}
+    • Reason:
       #{inspect(reason)}
     #{from()}
     """
   end
 
-  warn :remains_unregistered, {server, timeout, times, reason, env} do
+  info :still_not_registered, {server, timeout, times_left, reason, env} do
     """
-    \nServer remains unregistered...
+    \nServer still not registered...
+    • Inside function:
+      #{fun(env)}
+    • Server:
+      #{inspect(server)}
+    • Waited: #{timeout} ms
+    • Times left: #{times_left}
+    • Issue still 'unresolved':
+      #{inspect(reason)}
+    #{from()}
+    """
+  end
+
+  warn :remains_not_registered, {server, timeout, times, reason, env} do
+    """
+    \nServer remains not registered...
     • Inside function:
       #{fun(env)}
     • Server:

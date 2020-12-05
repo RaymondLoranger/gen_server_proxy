@@ -1,5 +1,10 @@
 defmodule GenServer.Proxy.Stopper do
+  use PersistConfig
+
   alias GenServer.Proxy.{Log, Timer}
+
+  @timeout get_env(:timeout)
+  @times get_env(:times)
 
   @spec stop(term, term, module) :: :ok | {:error, term}
   def stop(reason, server_id, module) do
@@ -9,16 +14,17 @@ defmodule GenServer.Proxy.Stopper do
       GenServer.stop(server, reason)
     catch
       :exit, exit_reason ->
-        :ok = Log.error(:exit, {server, exit_reason, __ENV__})
+        not_registered = {server, @timeout, @times, exit_reason, __ENV__}
+        :ok = Log.error(:not_registered, not_registered)
         Timer.wait(server, exit_reason)
 
         try do
           GenServer.stop(server, reason)
         catch
           :exit, exit_reason ->
-            :ok = Log.error(:exit, {server, exit_reason, __ENV__})
+            :ok = Log.error(:not_registered, {server, exit_reason, __ENV__})
             module.server_unregistered(server_id)
-            {:error, reason}
+            {:error, exit_reason}
         end
     end
   end
