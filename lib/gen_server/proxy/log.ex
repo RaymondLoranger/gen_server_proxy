@@ -38,7 +38,7 @@ defmodule GenServer.Proxy.Log do
       #{inspect(server)}
     • Waited: #{timeout} ms
     • Times: #{times}
-    • Unresolved issue:
+    • Issue remaining 'unresolved':
       #{inspect(reason)}
     #{from()}
     """
@@ -54,7 +54,7 @@ defmodule GenServer.Proxy.Log do
     • Server PID: #{inspect(pid)}
     • Waited: #{timeout} ms
     • Times: #{times}
-    • Resolved issue:
+    • Issue now 'resolved':
       #{inspect(reason)}
     #{from()}
     """
