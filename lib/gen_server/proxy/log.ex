@@ -22,7 +22,7 @@ defmodule GenServer.Proxy.Log do
     • Server:
       #{inspect(server)}
     • Waiting: #{timeout} ms
-    • Up to: #{times} times
+    • Times left: #{times}
     • Reason:
       #{inspect(reason)}
     #{from()}
