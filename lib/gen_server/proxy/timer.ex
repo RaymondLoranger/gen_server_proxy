@@ -14,8 +14,8 @@ defmodule GenServer.Proxy.Timer do
   # On restarts, wait if server not yet registered...
   @spec wait(GenServer.name(), term, non_neg_integer) :: :ok
   defp wait(server, reason, 0) do
-    remains_not_registered = {server, @timeout, @times, reason, __ENV__}
-    :ok = Log.warn(:remains_not_registered, remains_not_registered)
+    remains_unregistered = {server, @timeout, @times, reason, __ENV__}
+    :ok = Log.warn(:remains_unregistered, remains_unregistered)
   end
 
   defp wait(server, reason, times_left) do
@@ -29,8 +29,8 @@ defmodule GenServer.Proxy.Timer do
         :ok = Log.info(:now_registered, now_registered)
 
       nil ->
-        still_not_registered = {server, @timeout, times_left, reason, __ENV__}
-        :ok = Log.info(:still_not_registered, still_not_registered)
+        still_unregistered = {server, @timeout, times_left, reason, __ENV__}
+        :ok = Log.info(:still_unregistered, still_unregistered)
         wait(server, reason, times_left)
     end
   end
