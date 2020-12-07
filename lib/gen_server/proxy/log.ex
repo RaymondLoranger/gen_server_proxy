@@ -1,9 +1,9 @@
 defmodule GenServer.Proxy.Log do
   use File.Only.Logger
 
-  error :unregistered, {server, reason, env} do
+  error :unregistered, {fun, server, reason, env} do
     """
-    \nServer unregistered...
+    \n'GenServer.#{fun}/2' failed: server unregistered...
     • Inside function:
       #{fun(env)}
     • Server:
@@ -14,9 +14,9 @@ defmodule GenServer.Proxy.Log do
     """
   end
 
-  error :unregistered, {server, timeout, times, reason, env} do
+  error :unregistered, {fun, server, timeout, times, reason, env} do
     """
-    \nServer unregistered...
+    \n'GenServer.#{fun}/2' failed: server unregistered...
     • Inside function:
       #{fun(env)}
     • Server:
