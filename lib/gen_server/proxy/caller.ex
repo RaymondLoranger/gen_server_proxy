@@ -15,14 +15,14 @@ defmodule GenServer.Proxy.Caller do
     catch
       :exit, reason ->
         unregistered = {:call, server, @timeout, @times, reason, __ENV__}
-        :ok = Log.error(:unregistered, unregistered)
+        :ok = Log.warn(:unregistered, unregistered)
         Timer.wait(server, reason)
 
         try do
           GenServer.call(server, request)
         catch
           :exit, reason ->
-            :ok = Log.error(:unregistered, {:call, server, reason, __ENV__})
+            :ok = Log.warn(:unregistered, {:call, server, reason, __ENV__})
             module.server_unregistered(server_id)
             {:error, reason}
         end

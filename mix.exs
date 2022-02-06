@@ -11,8 +11,7 @@ defmodule GenServer.Proxy.MixProject do
       source_url: source_url(),
       description: description(),
       package: package(),
-      deps: deps(),
-      dialyzer: [plt_add_apps: [:mix]]
+      deps: deps()
     ]
   end
 

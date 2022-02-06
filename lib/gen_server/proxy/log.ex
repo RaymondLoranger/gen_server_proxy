@@ -1,77 +1,57 @@
 defmodule GenServer.Proxy.Log do
   use File.Only.Logger
 
-  error :unregistered, {fun, server, reason, env} do
+  warn :unregistered, {fun, server, reason, env} do
     """
     \n'GenServer.#{fun}/2' failed: server unregistered...
-    • Inside function:
-      #{fun(env)}
-    • Server:
-      #{inspect(server)}
-    • Reason:
-      #{inspect(reason)}
-    #{from()}
+    • Server: #{inspect(server) |> maybe_break(10)}
+    • Reason: #{inspect(reason) |> maybe_break(10)}
+    #{from(env, __MODULE__)}
     """
   end
 
-  error :unregistered, {fun, server, timeout, times, reason, env} do
+  warn :unregistered, {fun, server, timeout, times, reason, env} do
     """
     \n'GenServer.#{fun}/2' failed: server unregistered...
-    • Inside function:
-      #{fun(env)}
-    • Server:
-      #{inspect(server)}
+    • Server: #{inspect(server) |> maybe_break(10)}
     • Waiting: #{timeout} ms
     • Times left: #{times}
-    • Reason:
-      #{inspect(reason)}
-    #{from()}
+    • Reason: #{inspect(reason) |> maybe_break(10)}
+    #{from(env, __MODULE__)}
     """
   end
 
   warn :remains_unregistered, {server, timeout, times, reason, env} do
     """
     \nServer remains unregistered...
-    • Inside function:
-      #{fun(env)}
-    • Server:
-      #{inspect(server)}
+    • Server: #{inspect(server) |> maybe_break(10)}
     • Waited: #{timeout} ms
     • Times: #{times}
-    • Issue remaining 'unresolved':
-      #{inspect(reason)}
-    #{from()}
+    • Issue remaining 'unresolved': #{inspect(reason) |> maybe_break(32)}
+    #{from(env, __MODULE__)}
     """
   end
 
-  info :still_unregistered, {server, timeout, times_left, reason, env} do
+  warn :still_unregistered, {server, timeout, times_left, reason, env} do
     """
     \nServer still unregistered...
-    • Inside function:
-      #{fun(env)}
-    • Server:
-      #{inspect(server)}
+    • Server: #{inspect(server) |> maybe_break(10)}
     • Waited: #{timeout} ms
     • Times left: #{times_left}
-    • Issue still 'unresolved':
-      #{inspect(reason)}
-    #{from()}
+    • Issue still 'unresolved': #{inspect(reason) |> maybe_break(28)}
+    #{from(env, __MODULE__)}
     """
   end
 
-  info :now_registered, {server, timeout, times, reason, pid, env} do
+  warn :now_registered, {server, timeout, times, reason, pid, env} do
     """
     \nServer now registered...
-    • Inside function:
-      #{fun(env)}
-    • Server:
-      #{inspect(server)}
+    • Server: #{inspect(server) |> maybe_break(10)}
     • Server PID: #{inspect(pid)}
     • Waited: #{timeout} ms
     • Times: #{times}
-    • Issue now 'resolved':
-      #{inspect(reason)}
-    #{from()}
+    • Issue now 'resolved': #{inspect(reason) |> maybe_break(24)}
+    #{from(env, __MODULE__)}
     """
   end
 end
