@@ -1,7 +1,12 @@
 # GenServer Proxy
 
-Invokes `call`, `cast` or `stop` in `GenServer` with a registered server name.
-Will wait a bit if the server name is not yet registered on restarts.
+Invokes the following functions for a server registered with a server ID:
+
+- `GenServer.call/3`
+- `GenServer.cast/2`
+- `GenServer.stop/3`
+
+Will wait a bit if the server is not yet registered on restarts.
 
 ## Installation
 

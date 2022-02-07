@@ -1,11 +1,19 @@
 defmodule GenServer.Proxy do
   @moduledoc """
-  Invokes `call`, `cast` or `stop` in `GenServer` with a registered server name.
-  Will wait a bit if the server name is not yet registered on restarts.
+  Invokes the following functions for a server registered with a server ID:
+
+  - `GenServer.call/3`
+  - `GenServer.cast/2`
+  - `GenServer.stop/3`
+
+  Will wait a bit if the server is not yet registered on restarts.
   """
 
+  @typedoc "Server ID"
+  @type server_id :: term
+
   @doc """
-  Converts `server_id` into a server name like a `via tuple`.
+  Called to convert the `server_id` into a server name.
 
   ## Examples
 
@@ -17,7 +25,7 @@ defmodule GenServer.Proxy do
       def server_name(game_name),
         do: {:global, {GameServer, game_name}}
   """
-  @callback server_name(server_id :: term) :: GenServer.name()
+  @callback server_name(server_id) :: GenServer.name()
 
   @doc ~S'''
   Called when the server remains unregistered despite waiting a bit.
@@ -26,9 +34,9 @@ defmodule GenServer.Proxy do
 
       @impl GenServer.Proxy
       def server_unregistered(game_name),
-        do: IO.puts("Game #{game_name} not started.")
+        do: :ok = IO.puts("Game #{game_name} not started.")
   '''
-  @callback server_unregistered(server_id :: term) :: term
+  @callback server_unregistered(server_id) :: term
 
   @doc """
   Either aliases `GenServer.Proxy` (this module) and requires the alias or
@@ -59,7 +67,7 @@ defmodule GenServer.Proxy do
   end
 
   @doc ~S'''
-  Makes a synchronous call to the server registered via `server_id`.
+  Makes a synchronous call to the server registered with `server_id`.
   Will wait a bit if the server is not yet registered on restarts.
 
   The given `module` (or by default `<caller's_module>.GenServerProxy`) must
@@ -78,7 +86,7 @@ defmodule GenServer.Proxy do
 
         @impl GenServer.Proxy
         def server_unregistered(game_name),
-          do: IO.puts("Game #{game_name} not started.")
+          do: :ok = IO.puts("Game #{game_name} not started.")
       end
 
       # We could use the call macro like so:
@@ -86,56 +94,97 @@ defmodule GenServer.Proxy do
       defmodule Game.Engine do
         use GenServer.Proxy
 
-        def summary(game_name), do: call(:summary, game_name)
+        def summary(game_name), do: call(game_name, :summary)
         ...
       end
   '''
-  defmacro call(request, server_id, module \\ nil) do
+  defmacro call(server_id, request, timeout \\ 5000, module \\ nil) do
     if module do
-      quote bind_quoted: [request: request, id: server_id, module: module] do
-        GenServer.Proxy.Caller.call(request, id, module)
+      quote bind_quoted: [
+              server_id: server_id,
+              request: request,
+              timeout: timeout,
+              module: module
+            ] do
+        GenServer.Proxy.Caller.call(server_id, request, timeout, module)
       end
     else
-      quote bind_quoted: [request: request, id: server_id] do
-        GenServer.Proxy.Caller.call(request, id, __MODULE__.GenServerProxy)
+      quote bind_quoted: [
+              server_id: server_id,
+              request: request,
+              timeout: timeout
+            ] do
+        GenServer.Proxy.Caller.call(
+          server_id,
+          request,
+          timeout,
+          __MODULE__.GenServerProxy
+        )
       end
     end
   end
 
   @doc """
-  Sends an async request to the server registered via `server_id`.
+  Sends an async request to the server registered with `server_id`.
   Will wait a bit if the server is not yet registered on restarts.
 
   The given `module` (or by default `<caller's_module>.GenServerProxy`) must
   implement the 2 callbacks of `GenServer.Proxy` (this module).
   """
-  defmacro cast(request, server_id, module \\ nil) do
+  defmacro cast(server_id, request, module \\ nil) do
     if module do
-      quote bind_quoted: [request: request, id: server_id, module: module] do
-        GenServer.Proxy.Caster.cast(request, id, module)
+      quote bind_quoted: [
+              server_id: server_id,
+              request: request,
+              module: module
+            ] do
+        GenServer.Proxy.Caster.cast(server_id, request, module)
       end
     else
-      quote bind_quoted: [request: request, id: server_id] do
-        GenServer.Proxy.Caster.cast(request, id, __MODULE__.GenServerProxy)
+      quote bind_quoted: [server_id: server_id, request: request] do
+        GenServer.Proxy.Caster.cast(
+          server_id,
+          request,
+          __MODULE__.GenServerProxy
+        )
       end
     end
   end
 
   @doc """
-  Synchronously stops the server registered via `server_id`.
+  Synchronously stops the server registered with `server_id`.
   Will wait a bit if the server is not yet registered on restarts.
 
   The given `module` (or by default `<caller's_module>.GenServerProxy`) must
   implement the 2 callbacks of `GenServer.Proxy` (this module).
   """
-  defmacro stop(reason, server_id, module \\ nil) do
+  defmacro stop(
+             server_id,
+             reason \\ :normal,
+             timeout \\ :infinity,
+             module \\ nil
+           ) do
     if module do
-      quote bind_quoted: [reason: reason, id: server_id, module: module] do
-        GenServer.Proxy.Stopper.stop(reason, id, module)
+      quote bind_quoted: [
+              server_id: server_id,
+              reason: reason,
+              timeout: timeout,
+              module: module
+            ] do
+        GenServer.Proxy.Stopper.stop(server_id, reason, timeout, module)
       end
     else
-      quote bind_quoted: [reason: reason, id: server_id] do
-        GenServer.Proxy.Stopper.stop(reason, id, __MODULE__.GenServerProxy)
+      quote bind_quoted: [
+              server_id: server_id,
+              reason: reason,
+              timeout: timeout
+            ] do
+        GenServer.Proxy.Stopper.stop(
+          server_id,
+          reason,
+          timeout,
+          __MODULE__.GenServerProxy
+        )
       end
     end
   end
