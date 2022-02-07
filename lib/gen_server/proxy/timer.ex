@@ -11,7 +11,7 @@ defmodule GenServer.Proxy.Timer do
 
   ## Private functions
 
-  # On restarts, wait if GenServer not yet registered...
+  # On restarts, wait if GenServer was killed or is not yet registered...
   @spec wait(GenServer.name(), non_neg_integer) :: :ok
   defp wait(_server, 0) do
     :ok
@@ -24,12 +24,12 @@ defmodule GenServer.Proxy.Timer do
     case GenServer.whereis(server) do
       pid when is_pid(pid) ->
         times = @times - times_left
-        registered = {server, @timeout, times, pid, __ENV__}
-        :ok = Log.warn(:registered, registered)
+        now_registered = {server, @timeout, times, pid, __ENV__}
+        :ok = Log.warn(:now_registered, now_registered)
 
       nil ->
-        unregistered = {server, @timeout, times_left, __ENV__}
-        :ok = Log.warn(:unregistered, unregistered)
+        still_unregistered = {server, @timeout, times_left, __ENV__}
+        :ok = Log.warn(:still_unregistered, still_unregistered)
         wait(server, times_left)
     end
   end

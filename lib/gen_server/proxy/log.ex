@@ -7,7 +7,7 @@ defmodule GenServer.Proxy.Log do
     • Server: #{inspect(server) |> maybe_break(10)}
     • Reason: #{inspect(reason) |> maybe_break(10)}
     • Waiting: #{timeout} ms
-    • Times: #{times}
+    • Times left: #{times}
     #{from(env, __MODULE__)}
     """
   end
@@ -21,9 +21,9 @@ defmodule GenServer.Proxy.Log do
     """
   end
 
-  warn :unregistered, {server, timeout, times_left, env} do
+  warn :still_unregistered, {server, timeout, times_left, env} do
     """
-    \nServer unregistered...
+    \nServer still unregistered...
     • Server: #{inspect(server) |> maybe_break(10)}
     • Waited: #{timeout} ms
     • Times left: #{times_left}
@@ -31,9 +31,9 @@ defmodule GenServer.Proxy.Log do
     """
   end
 
-  warn :registered, {server, timeout, times, pid, env} do
+  warn :now_registered, {server, timeout, times, pid, env} do
     """
-    \nServer registered...
+    \nServer now registered...
     • Server: #{inspect(server) |> maybe_break(10)}
     • Server PID: #{inspect(pid)}
     • Waited: #{timeout} ms
