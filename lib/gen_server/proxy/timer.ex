@@ -12,6 +12,7 @@ defmodule GenServer.Proxy.Timer do
   ## Private functions
 
   # On restarts, wait if GenServer was killed or is not yet registered...
+  # Note this is an assumption as the GenServer may have never existed...
   @spec wait(GenServer.name(), non_neg_integer) :: :ok
   defp wait(_server, 0) do
     :ok

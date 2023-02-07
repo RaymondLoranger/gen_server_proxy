@@ -29,6 +29,8 @@ defmodule GenServer.Proxy do
 
   @doc ~S'''
   Called when the server remains unregistered despite waiting a bit.
+  Should serve to print a relevant message about the failed request.
+  This callback is overridable i.e. it has a default implementation.
 
   ## Examples
 
@@ -58,10 +60,14 @@ defmodule GenServer.Proxy do
       quote do
         alias unquote(__MODULE__), as: unquote(alias)
         require unquote(alias)
+        def server_unregistered(_server_id), do: :ok
+        defoverridable server_unregistered: 1
       end
     else
       quote do
         import unquote(__MODULE__)
+        def server_unregistered(_server_id), do: :ok
+        defoverridable server_unregistered: 1
       end
     end
   end
@@ -71,7 +77,7 @@ defmodule GenServer.Proxy do
   Will wait a bit if the GenServer is not yet registered on restarts.
 
   The given `module` (or by default `<caller's_module>.GenServerProxy`) must
-  implement the 2 callbacks of `GenServer.Proxy` (this module).
+  implement callback `c:GenServer.Proxy.server_name/1`.
 
   ## Examples
 
@@ -129,7 +135,7 @@ defmodule GenServer.Proxy do
   Will wait a bit if the GenServer is not yet registered on restarts.
 
   The given `module` (or by default `<caller's_module>.GenServerProxy`) must
-  implement the 2 callbacks of `GenServer.Proxy` (this module).
+  implement callback `c:GenServer.Proxy.server_name/1`.
   """
   defmacro cast(server_id, request, module \\ nil) do
     if module do
@@ -156,7 +162,7 @@ defmodule GenServer.Proxy do
   Will wait a bit if the GenServer is not yet registered on restarts.
 
   The given `module` (or by default `<caller's_module>.GenServerProxy`) must
-  implement the 2 callbacks of `GenServer.Proxy` (this module).
+  implement callback `c:GenServer.Proxy.server_name/1`.
   """
   defmacro stop(
              server_id,

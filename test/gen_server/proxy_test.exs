@@ -8,7 +8,7 @@ defmodule GenServer.ProxyTest.GenServerProxy do
 
   @spec server_unregistered(String.t()) :: :ok
   def server_unregistered(game_name) do
-    :ok = IO.puts("Game #{game_name} not started.")
+    :ok = IO.puts("Game '#{game_name}' not started.")
   end
 end
 
@@ -26,14 +26,18 @@ defmodule GenServer.ProxyTest do
     test "returns {:error, reason}" do
       capture =
         fn ->
-          send(self(), call("Hangman", {:guess, "a"}, 5001))
+          try do
+            self() |> send(call("Hangman", {:guess, "a"}, 5001))
+          catch
+            :exit, reason -> self() |> send({:bad_call, reason})
+          end
         end
         |> CaptureIO.capture_io()
 
       mfargs = {GenServer, :call, [{:global, "Hangman"}, {:guess, "a"}, 5001]}
       reason = {:noproc, mfargs}
-      assert capture == "Game Hangman not started.\n"
-      assert_received {:error, ^reason}
+      assert capture == "Game 'Hangman' not started.\n"
+      assert_received {:bad_call, ^reason}
     end
   end
 end
