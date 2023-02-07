@@ -7,6 +7,7 @@ Invokes the following functions with a GenServer registered via a server ID:
 - `GenServer.stop/3`
 
 Will wait a bit if the GenServer is not yet registered on restarts.
+Note this is an assumption as the GenServer may have never existed.
 
 ## Installation
 
