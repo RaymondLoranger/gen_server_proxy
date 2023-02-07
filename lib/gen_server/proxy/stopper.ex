@@ -7,7 +7,7 @@ defmodule GenServer.Proxy.Stopper do
   @timeout get_env(:timeout)
   @times get_env(:times)
 
-  @spec stop(Proxy.server_id(), term, timeout, module) :: :ok
+  @spec stop(Proxy.server_id(), term, timeout, module) :: :ok | {:error, term}
   def stop(server_id, reason, timeout, module) do
     server = module.server_name(server_id)
 
@@ -25,7 +25,7 @@ defmodule GenServer.Proxy.Stopper do
           :exit, cause ->
             :ok = Log.warn(:failed_again, {:stop, 3, server, cause, __ENV__})
             module.server_unregistered(server_id)
-            GenServer.stop(server, reason, timeout)
+            {:error, reason}
         end
     end
   end

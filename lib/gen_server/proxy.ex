@@ -7,7 +7,7 @@ defmodule GenServer.Proxy do
   - `GenServer.stop/3`
 
   Will wait a bit if the GenServer is not yet registered on restarts.
-  Note this is an assumption as the GenServer may have never existed.
+  Note this is an assumption as the GenServer may have never started.
   """
 
   @typedoc "Server ID"
@@ -31,7 +31,6 @@ defmodule GenServer.Proxy do
   @doc ~S'''
   Called when the server remains unregistered despite waiting a bit.
   Should serve to print a relevant message about the failed request.
-  This callback is optional and it has a default implementation too.
 
   ## Examples
 
@@ -40,8 +39,6 @@ defmodule GenServer.Proxy do
         do: :ok = IO.puts("Game #{game_name} not started.")
   '''
   @callback server_unregistered(server_id) :: term
-
-  @optional_callbacks server_unregistered: 1
 
   @doc """
   Either aliases `GenServer.Proxy` (this module) and requires the alias or
@@ -63,14 +60,10 @@ defmodule GenServer.Proxy do
       quote do
         alias unquote(__MODULE__), as: unquote(alias)
         require unquote(alias)
-        def server_unregistered(_server_id), do: :ok
-        defoverridable server_unregistered: 1
       end
     else
       quote do
         import unquote(__MODULE__)
-        def server_unregistered(_server_id), do: :ok
-        defoverridable server_unregistered: 1
       end
     end
   end
@@ -80,7 +73,7 @@ defmodule GenServer.Proxy do
   Will wait a bit if the GenServer is not yet registered on restarts.
 
   The given `module` (or by default `<caller's_module>.GenServerProxy`) must
-  implement callback `c:GenServer.Proxy.server_name/1`.
+  implement the 2 callbacks of `GenServer.Proxy` (this module).
 
   ## Examples
 
@@ -138,7 +131,7 @@ defmodule GenServer.Proxy do
   Will wait a bit if the GenServer is not yet registered on restarts.
 
   The given `module` (or by default `<caller's_module>.GenServerProxy`) must
-  implement callback `c:GenServer.Proxy.server_name/1`.
+  implement the 2 callbacks of `GenServer.Proxy` (this module).
   """
   defmacro cast(server_id, request, module \\ nil) do
     if module do
@@ -165,7 +158,7 @@ defmodule GenServer.Proxy do
   Will wait a bit if the GenServer is not yet registered on restarts.
 
   The given `module` (or by default `<caller's_module>.GenServerProxy`) must
-  implement callback `c:GenServer.Proxy.server_name/1`.
+  implement the 2 callbacks of `GenServer.Proxy` (this module).
   """
   defmacro stop(
              server_id,

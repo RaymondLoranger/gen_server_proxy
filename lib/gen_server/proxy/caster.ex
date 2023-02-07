@@ -7,7 +7,7 @@ defmodule GenServer.Proxy.Caster do
   @timeout get_env(:timeout)
   @times get_env(:times)
 
-  @spec cast(Proxy.server_id(), term, module) :: :ok
+  @spec cast(Proxy.server_id(), term, module) :: :ok | {:error, term}
   def cast(server_id, request, module) do
     server = module.server_name(server_id)
 
@@ -25,7 +25,7 @@ defmodule GenServer.Proxy.Caster do
           :exit, reason ->
             :ok = Log.warn(:failed_again, {:cast, 2, server, reason, __ENV__})
             module.server_unregistered(server_id)
-            GenServer.cast(server, request)
+            {:error, reason}
         end
     end
   end

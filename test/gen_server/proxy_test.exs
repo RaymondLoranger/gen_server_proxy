@@ -26,18 +26,14 @@ defmodule GenServer.ProxyTest do
     test "returns {:error, reason}" do
       capture =
         fn ->
-          try do
-            self() |> send(call("Hangman", {:guess, "a"}, 5001))
-          catch
-            :exit, reason -> self() |> send({:bad_call, reason})
-          end
+          self() |> send(call("Hangman", {:guess, "a"}, 5001))
         end
         |> CaptureIO.capture_io()
 
       mfargs = {GenServer, :call, [{:global, "Hangman"}, {:guess, "a"}, 5001]}
       reason = {:noproc, mfargs}
       assert capture == "Game 'Hangman' not started.\n"
-      assert_received {:bad_call, ^reason}
+      assert_received {:error, ^reason}
     end
   end
 end

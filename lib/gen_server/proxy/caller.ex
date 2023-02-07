@@ -7,7 +7,7 @@ defmodule GenServer.Proxy.Caller do
   @timeout get_env(:timeout)
   @times get_env(:times)
 
-  @spec call(Proxy.server_id(), term, timeout, module) :: term
+  @spec call(Proxy.server_id(), term, timeout, module) :: term | {:error, term}
   def call(server_id, request, timeout, module) do
     server = module.server_name(server_id)
 
@@ -28,7 +28,7 @@ defmodule GenServer.Proxy.Caller do
           :exit, reason ->
             :ok = Log.warn(:failed_again, {:call, 3, server, reason, __ENV__})
             module.server_unregistered(server_id)
-            GenServer.call(server, request, timeout)
+            {:error, reason}
         end
     end
   end
