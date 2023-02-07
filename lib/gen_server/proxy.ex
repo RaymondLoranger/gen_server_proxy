@@ -31,7 +31,7 @@ defmodule GenServer.Proxy do
   @doc ~S'''
   Called when the server remains unregistered despite waiting a bit.
   Should serve to print a relevant message about the failed request.
-  This callback is overridable i.e. it has a default implementation.
+  This callback is optional and it has a default implementation too.
 
   ## Examples
 
@@ -40,6 +40,8 @@ defmodule GenServer.Proxy do
         do: :ok = IO.puts("Game #{game_name} not started.")
   '''
   @callback server_unregistered(server_id) :: term
+
+  @optional_callbacks server_unregistered: 1
 
   @doc """
   Either aliases `GenServer.Proxy` (this module) and requires the alias or
