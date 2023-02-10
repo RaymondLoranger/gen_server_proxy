@@ -4,7 +4,7 @@ defmodule GenServer.Proxy.MixProject do
   def project do
     [
       app: :gen_server_proxy,
-      version: "0.1.44",
+      version: "0.1.45",
       elixir: "~> 1.11",
       start_permanent: Mix.env() == :prod,
       name: "GenServer Proxy",
@@ -47,7 +47,7 @@ defmodule GenServer.Proxy.MixProject do
     [
       {:dialyxir, "~> 1.0", only: :dev, runtime: false},
       {:ex_doc, "~> 0.22", only: :dev, runtime: false},
-      {:file_only_logger, "~> 0.1"},
+      {:file_only_logger, "~> 0.2"},
       {:persist_config, "~> 0.4", runtime: false}
     ]
   end
