@@ -19,14 +19,16 @@ defmodule GenServer.Proxy.Caller do
       # Whatever the reason, we wait expecting OTP to fix the issue...
       :exit, reason ->
         failed = {:call, 3, server, @timeout, @times, reason, __ENV__}
-        :ok = Log.warn(:failed, failed)
+        :ok = Log.warning(:failed, failed)
         :ok = Timer.wait(server)
 
         try do
           GenServer.call(server, request, timeout)
         catch
           :exit, reason ->
-            :ok = Log.warn(:failed_again, {:call, 3, server, reason, __ENV__})
+            :ok =
+              Log.warning(:failed_again, {:call, 3, server, reason, __ENV__})
+
             module.server_unregistered(server_id)
             {:error, reason}
         end

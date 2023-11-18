@@ -23,16 +23,16 @@ defmodule GenServer.Proxy.Timer do
     times_left = times_left - 1
 
     case GenServer.whereis(server) do
-      # Note there is no guarantee the returned pid is alive,
-      # as a process could terminate immediately after it is looked up.
+      # Note there is no guarantee the returned pid is alive, as a
+      # process could terminate immediately after it is looked up.
       pid when is_pid(pid) ->
         times = @times - times_left
         now_registered = {server, @timeout, times, pid, __ENV__}
-        :ok = Log.warn(:now_registered, now_registered)
+        :ok = Log.warning(:now_registered, now_registered)
 
       nil ->
         still_unregistered = {server, @timeout, times_left, __ENV__}
-        :ok = Log.warn(:still_unregistered, still_unregistered)
+        :ok = Log.warning(:still_unregistered, still_unregistered)
         wait(server, times_left)
     end
   end
