@@ -1,11 +1,5 @@
 import Config
 
-# Log file paths...
-debug_path = ~c"./log/debug.log"
-info_path = ~c"./log/info.log"
-warning_path = ~c"./log/warning.log"
-error_path = ~c"./log/error.log"
-
 # Configuration values...
 format = "\n$date $time [$level] $message\n"
 truncate_default_in_bytes = 8 * 1024
@@ -19,6 +13,12 @@ colors = [
   warning: :light_yellow,
   error: :light_red
 ]
+
+# Log file paths...
+debug_path = ~c"./log/debug.log"
+info_path = ~c"./log/info.log"
+warning_path = ~c"./log/warning.log"
+error_path = ~c"./log/error.log"
 
 formatter =
   Logger.Formatter.new(
