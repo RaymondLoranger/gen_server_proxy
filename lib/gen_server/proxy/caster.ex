@@ -23,9 +23,7 @@ defmodule GenServer.Proxy.Caster do
           GenServer.cast(server, request)
         catch
           :exit, reason ->
-            :ok =
-              Log.warning(:failed_again, {:cast, 2, server, reason, __ENV__})
-
+            :ok = Log.error(:failed_again, {:cast, 2, server, reason, __ENV__})
             module.server_unregistered(server_id)
             {:error, reason}
         end

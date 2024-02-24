@@ -26,9 +26,7 @@ defmodule GenServer.Proxy.Caller do
           GenServer.call(server, request, timeout)
         catch
           :exit, reason ->
-            :ok =
-              Log.warning(:failed_again, {:call, 3, server, reason, __ENV__})
-
+            :ok = Log.error(:failed_again, {:call, 3, server, reason, __ENV__})
             module.server_unregistered(server_id)
             {:error, reason}
         end

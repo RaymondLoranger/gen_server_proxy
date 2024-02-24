@@ -28,7 +28,7 @@ defmodule GenServer.Proxy.Timer do
       pid when is_pid(pid) ->
         times = @times - times_left
         now_registered = {server, @timeout, times, pid, __ENV__}
-        :ok = Log.warning(:now_registered, now_registered)
+        :ok = Log.info(:now_registered, now_registered)
 
       nil ->
         still_unregistered = {server, @timeout, times_left, __ENV__}
