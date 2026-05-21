@@ -1,11 +1,13 @@
 defmodule GenServer.ProxyTest.GenServerProxy do
   @behaviour GenServer.Proxy
 
+  @impl GenServer.Proxy
   @spec server_name(String.t()) :: GenServer.name()
   def server_name(game_name) do
     {:global, game_name}
   end
 
+  @impl GenServer.Proxy
   @spec server_unregistered(String.t()) :: :ok
   def server_unregistered(game_name) do
     :ok = IO.puts("Game '#{game_name}' not started.")
