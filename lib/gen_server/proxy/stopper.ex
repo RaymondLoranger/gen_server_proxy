@@ -11,7 +11,7 @@ defmodule GenServer.Proxy.Stopper do
   Synchronously stops the GenServer registered via `server_id`.
   Will wait a bit if the GenServer is not yet registered on restarts.
   """
-  @spec stop(Proxy.server_id(), term, timeout, module) :: :ok | {:error, term}
+  @spec stop(Proxy.server_id(), term, timeout, module) :: :ok
   def stop(server_id, reason, timeout, module) do
     server = module.server_name(server_id)
 

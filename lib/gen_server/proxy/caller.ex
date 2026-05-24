@@ -11,7 +11,7 @@ defmodule GenServer.Proxy.Caller do
   Makes a synchronous call to the GenServer registered via `server_id`.
   Will wait a bit if the GenServer is not yet registered on restarts.
   """
-  @spec call(Proxy.server_id(), term, timeout, module) :: term | {:error, term}
+  @spec call(Proxy.server_id(), term, timeout, module) :: term
   def call(server_id, request, timeout, module) do
     server = module.server_name(server_id)
 

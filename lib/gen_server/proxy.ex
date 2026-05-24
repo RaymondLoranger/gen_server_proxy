@@ -77,28 +77,44 @@ defmodule GenServer.Proxy do
 
   ## Examples
 
-      # Assuming the following callback module:
-
-      defmodule Game.Engine.GenServerProxy do
-        @behaviour GenServer.Proxy
-
-        @impl GenServer.Proxy
-        def server_name(game_name),
-          do: {:via, Registry, {:registry, game_name}}
-
-        @impl GenServer.Proxy
-        def server_unregistered(game_name),
-          do: :ok = IO.puts("Game #{game_name} not started.")
-      end
-
-      # We could use the call macro like so:
-
-      defmodule Game.Engine do
-        use GenServer.Proxy
-
-        def summary(game_name), do: call(game_name, :summary)
-        ...
-      end
+      iex> defmodule Game.Engine.GenServerProxy do
+      iex>   @behaviour GenServer.Proxy
+      iex>
+      iex>   @impl GenServer.Proxy
+      iex>   def server_name(game_name) do
+      iex>     {:global, game_name}
+      iex>   end
+      iex>
+      iex>   @impl GenServer.Proxy
+      iex>   def server_unregistered(game_name) do
+      iex>     :ok = IO.puts("Game '#{game_name}' not started.")
+      iex>   end
+      iex> end
+      iex>
+      iex> defmodule Game.Server do
+      iex>   use GenServer
+      iex>
+      iex>   @impl GenServer
+      iex>   def init(init_arg), do: {:ok, init_arg}
+      iex>
+      iex>   @impl GenServer
+      iex>   def handle_call(:summary, _from, state), do: {:reply, state, state}
+      iex> end
+      iex>
+      iex> defmodule Game.Engine do
+      iex>   use GenServer.Proxy
+      iex>
+      iex>   alias Game.Engine.GenServerProxy, as: Proxy
+      iex>
+      iex>   id = "Tic-Tac-Toe"
+      iex>   name = Proxy.server_name(id)
+      iex>   {:ok, _pid} = GenServer.start_link(Game.Server, "XOX", name: name)
+      iex>
+      iex>   def summary(id), do: call(id, :summary)
+      iex> end
+      iex>
+      iex> Game.Engine.summary("Tic-Tac-Toe")
+      "XOX"
   '''
   defmacro call(server_id, request, timeout \\ 5000, module \\ nil) do
     if module do

@@ -3,7 +3,7 @@ defmodule GenServer.Proxy.Log do
 
   warning :failed, {fun, arity, server, timeout, times, reason, env} do
     """
-    \n'GenServer.#{fun}/#{arity}' failed: server still unregistered...
+    \n'GenServer.#{fun}/#{arity}' failed: server unregistered...
     • Server: #{inspect(server) |> maybe_break(10)}
     • Reason: #{inspect(reason) |> maybe_break(10)}
     • Waiting: #{timeout} ms

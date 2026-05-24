@@ -11,7 +11,7 @@ defmodule GenServer.Proxy.Caster do
   Sends an async request to the GenServer registered via `server_id`.
   Will wait a bit if the GenServer is not yet registered on restarts.
   """
-  @spec cast(Proxy.server_id(), term, module) :: :ok | {:error, term}
+  @spec cast(Proxy.server_id(), term, module) :: :ok
   def cast(server_id, request, module) do
     server = module.server_name(server_id)
 

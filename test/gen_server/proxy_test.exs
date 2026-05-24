@@ -3,14 +3,30 @@ defmodule GenServer.ProxyTest.GenServerProxy do
 
   @impl GenServer.Proxy
   @spec server_name(String.t()) :: GenServer.name()
-  def server_name(game_name) do
-    {:global, game_name}
+  def server_name(stack_name) do
+    {:global, stack_name}
   end
 
   @impl GenServer.Proxy
   @spec server_unregistered(String.t()) :: :ok
-  def server_unregistered(game_name) do
-    :ok = IO.puts("Game '#{game_name}' not started.")
+  def server_unregistered(stack_name) do
+    :ok = IO.puts("Stack '#{stack_name}' not started.")
+  end
+end
+
+defmodule Stack do
+  use GenServer
+
+  @impl GenServer
+  def init(elements) do
+    initial_state = String.split(elements, ",", trim: true)
+    {:ok, initial_state}
+  end
+
+  @impl GenServer
+  def handle_call(:pop, _from, state) do
+    [to_caller | new_state] = state
+    {:reply, to_caller, new_state}
   end
 end
 
@@ -25,7 +41,7 @@ defmodule GenServer.ProxyTest do
   doctest Proxy
 
   describe "Proxy.call/3" do
-    test "returns {:error, reason}" do
+    test "Fails if server unregistered" do
       call = fn game_name, request, timeout ->
         try do
           call(game_name, request, timeout)
@@ -35,13 +51,27 @@ defmodule GenServer.ProxyTest do
       end
 
       capture =
-        fn -> self() |> send(call.("sky-fall", {:guess, "a"}, 5001)) end
+        fn -> self() |> send(call.("haystack", {:guess, "a"}, 5001)) end
         |> CaptureIO.capture_io()
 
-      mfargs = {GenServer, :call, [{:global, "sky-fall"}, {:guess, "a"}, 5001]}
+      mfargs = {GenServer, :call, [{:global, "haystack"}, {:guess, "a"}, 5001]}
       reason = {:noproc, mfargs}
-      assert capture == "Game 'sky-fall' not started.\n"
+      assert capture == "Stack 'haystack' not started.\n"
       assert_received ^reason
+    end
+
+    test "makes a synchronous call" do
+      use GenServer.Proxy
+
+      alias GenServer.ProxyTest.GenServerProxy, as: Proxy
+
+      spawn(fn ->
+        :timer.sleep(30)
+        name = Proxy.server_name("stack")
+        {:ok, _pid} = GenServer.start_link(Stack, "hello,world", name: name)
+      end)
+
+      assert "hello" == call("stack", :pop)
     end
   end
 end
