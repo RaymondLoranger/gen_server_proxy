@@ -17,16 +17,8 @@ defmodule GenServer.Proxy.Stopper do
       :exit, cause ->
         failed = {:stop, 3, server, @timeout, @times, cause, __ENV__}
         :ok = Log.warning(:failed, failed)
-        :ok = Timer.wait(server)
-
-        try do
-          GenServer.stop(server, reason, timeout)
-        catch
-          :exit, cause ->
-            :ok = Log.error(:failed_again, {:stop, 3, server, cause, __ENV__})
-            module.server_unregistered(server_id)
-            {:error, reason}
-        end
+        :ok = Timer.wait(server, server_id, module, @times)
+        GenServer.stop(server, reason, timeout)
     end
   end
 end

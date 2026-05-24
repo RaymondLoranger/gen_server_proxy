@@ -3,7 +3,7 @@ defmodule GenServer.Proxy.Log do
 
   warning :failed, {fun, arity, server, timeout, times, reason, env} do
     """
-    \n'GenServer.#{fun}/#{arity}' failed...
+    \n'GenServer.#{fun}/#{arity}' failed: server still unregistered...
     • Server: #{inspect(server) |> maybe_break(10)}
     • Reason: #{inspect(reason) |> maybe_break(10)}
     • Waiting: #{timeout} ms
@@ -16,13 +16,13 @@ defmodule GenServer.Proxy.Log do
     """
     \nServer still unregistered...
     • Server: #{inspect(server) |> maybe_break(10)}
-    • Waited: #{timeout} ms
+    • Waiting: #{timeout} ms
     • Times left: #{times_left}
     #{from(env, __MODULE__)}\
     """
   end
 
-  info :now_registered, {server, timeout, times, pid, env} do
+  notice :now_registered, {server, timeout, times, pid, env} do
     """
     \nServer now registered...
     • Server: #{inspect(server) |> maybe_break(10)}
@@ -33,11 +33,12 @@ defmodule GenServer.Proxy.Log do
     """
   end
 
-  error :failed_again, {fun, arity, server, reason, env} do
+  error :remains_unregistered, {server, timeout, times, env} do
     """
-    \n'GenServer.#{fun}/#{arity}' failed again...
+    \nServer remains unregistered...
     • Server: #{inspect(server) |> maybe_break(10)}
-    • Reason: #{inspect(reason) |> maybe_break(10)}
+    • Waited: #{timeout} ms
+    • Times: #{times}
     #{from(env, __MODULE__)}\
     """
   end

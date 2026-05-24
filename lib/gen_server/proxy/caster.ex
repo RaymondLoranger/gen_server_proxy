@@ -17,16 +17,8 @@ defmodule GenServer.Proxy.Caster do
       :exit, reason ->
         failed = {:cast, 2, server, @timeout, @times, reason, __ENV__}
         :ok = Log.warning(:failed, failed)
-        :ok = Timer.wait(server)
-
-        try do
-          GenServer.cast(server, request)
-        catch
-          :exit, reason ->
-            :ok = Log.error(:failed_again, {:cast, 2, server, reason, __ENV__})
-            module.server_unregistered(server_id)
-            {:error, reason}
-        end
+        :ok = Timer.wait(server, server_id, module, @times)
+        GenServer.cast(server, request)
     end
   end
 end
