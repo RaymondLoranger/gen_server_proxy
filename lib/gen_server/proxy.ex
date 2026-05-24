@@ -104,7 +104,7 @@ defmodule GenServer.Proxy do
       iex> defmodule Game.Engine do
       iex>   use GenServer.Proxy
       iex>
-      iex>   alias Game.Engine.GenServerProxy, as: Proxy
+      iex>   alias __MODULE__.GenServerProxy, as: Proxy
       iex>
       iex>   id = "Tic-Tac-Toe"
       iex>   name = Proxy.server_name(id)
