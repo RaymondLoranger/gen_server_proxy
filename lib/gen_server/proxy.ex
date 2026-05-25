@@ -104,10 +104,10 @@ defmodule GenServer.Proxy do
       iex> defmodule Game.Engine do
       iex>   use GenServer.Proxy
       iex>
-      iex>   alias __MODULE__.GenServerProxy, as: Proxy
+      iex>   alias __MODULE__.GenServerProxy
       iex>
       iex>   id = "Tic-Tac-Toe"
-      iex>   name = Proxy.server_name(id)
+      iex>   name = GenServerProxy.server_name(id)
       iex>   {:ok, _pid} = GenServer.start_link(Game.Server, "XOX", name: name)
       iex>
       iex>   def summary(id), do: call(id, :summary)
