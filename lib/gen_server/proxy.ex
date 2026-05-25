@@ -84,7 +84,7 @@ defmodule GenServer.Proxy do
       iex>   def init(init_arg), do: {:ok, init_arg}
       iex>
       iex>   @impl GenServer
-      iex>   def handle_call(:summary, _from, state), do: {:reply, state, state}
+      iex>   def handle_call(:state, _from, state), do: {:reply, state, state}
       iex> end
       iex>
       iex> defmodule Game.Engine.GenServerProxy do
@@ -110,10 +110,10 @@ defmodule GenServer.Proxy do
       iex>   name = GenServerProxy.server_name(id)
       iex>   {:ok, _pid} = GenServer.start_link(Game.Server, "XOX", name: name)
       iex>
-      iex>   def summary(id), do: call(id, :summary)
+      iex>   def state(id), do: call(id, :state)
       iex> end
       iex>
-      iex> Game.Engine.summary("Tic-Tac-Toe")
+      iex> Game.Engine.state("Tic-Tac-Toe")
       "XOX"
   '''
   defmacro call(server_id, request, timeout \\ 5000, module \\ nil) do
