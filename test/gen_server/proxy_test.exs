@@ -78,11 +78,11 @@ defmodule GenServer.ProxyTest do
       :timer.sleep(200)
 
       assert File.read!("./log/info.log") =~
-               "[notice] \n" <>
-                 """
-                 Server now registered...
-                 • Server: {:global, "stack2"}
-                 """
+               """
+               [notice]\s
+               Server now registered...
+               • Server: {:global, "stack2"}
+               """
     end
   end
 
@@ -132,11 +132,11 @@ defmodule GenServer.ProxyTest do
       :timer.sleep(200)
 
       assert File.read!("./log/info.log") =~
-               "[notice] \n" <>
-                 """
-                 Server now registered...
-                 • Server: {:global, "stack6"}
-                 """
+               """
+               [notice]\s
+               Server now registered...
+               • Server: {:global, "stack6"}
+               """
 
       assert GenServerProxy.server_name("stack6") |> GenServer.whereis() == nil
     end
