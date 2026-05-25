@@ -48,6 +48,7 @@ defmodule GenServer.ProxyTest do
   doctest Proxy
 
   describe "Proxy.call/2,3" do
+    # ----- "stack1" -----
     test "Fails if server unregistered" do
       call = fn stack_name, request, timeout ->
         try do
@@ -67,6 +68,7 @@ defmodule GenServer.ProxyTest do
       assert_received ^reason
     end
 
+    # ----- "stack2" -----
     test "makes a synchronous call" do
       spawn(fn ->
         :timer.sleep(40)
@@ -87,6 +89,7 @@ defmodule GenServer.ProxyTest do
   end
 
   describe "Proxy.cast/2" do
+    # ----- "stack3" -----
     test "sends an asynchronous request" do
       name = GenServerProxy.server_name("stack3")
       {:ok, _pid} = GenServer.start_link(Stack, "hello,world", name: name)
@@ -96,12 +99,14 @@ defmodule GenServer.ProxyTest do
       assert call("stack3", :pop) == "hello"
     end
 
+    # ----- "stack4" -----
     test "returns :ok even when server not started" do
       assert cast("stack4", {:push, "hey"}) == :ok
     end
   end
 
   describe "Proxy.stop/2,3" do
+    # ----- "stack5" -----
     test "Fails if server unregistered" do
       stop = fn stack_name, request, timeout ->
         try do
@@ -121,6 +126,7 @@ defmodule GenServer.ProxyTest do
       assert_received ^reason
     end
 
+    # ----- "stack6" -----
     test "synchronously stops a GenServer" do
       spawn(fn ->
         :timer.sleep(40)
