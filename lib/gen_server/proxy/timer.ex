@@ -7,8 +7,10 @@ defmodule GenServer.Proxy.Timer do
   @timeout get_env(:timeout)
   @times get_env(:times)
 
-  # On restarts, wait if GenServer was killed or is not yet registered.
-  # Note this is an assumption as the GenServer may have never started.
+  @doc """
+  On restarts, wait if GenServer was killed or is not yet registered.
+  Note this is an assumption as the GenServer may have never started.
+  """
   @spec wait(GenServer.name(), Proxy.server_id(), module, non_neg_integer) ::
           :ok
   def wait(_server, _server_id, _module, 0) do

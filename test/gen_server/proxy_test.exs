@@ -87,7 +87,7 @@ defmodule GenServer.ProxyTest do
   end
 
   describe "Proxy.cast/2" do
-    test "sends an async request" do
+    test "sends an asynchronous request" do
       name = GenServerProxy.server_name("stack3")
       {:ok, _pid} = GenServer.start_link(Stack, "hello,world", name: name)
 

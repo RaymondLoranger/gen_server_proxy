@@ -3,7 +3,7 @@
 Invokes the following functions with a GenServer registered via a server ID:
 
 - `GenServer.call/3`
-- `GenServer.cast/2` (wait not needed as this is async)
+- `GenServer.cast/2` (wait not needed as this is asynchronous)
 - `GenServer.stop/3`
 
 Will wait a bit if the GenServer is not yet registered on restarts.

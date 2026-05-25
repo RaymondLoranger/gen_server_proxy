@@ -3,7 +3,7 @@ defmodule GenServer.Proxy do
   Invokes the following functions with a GenServer registered via a server ID:
 
   - `GenServer.call/3`
-  - `GenServer.cast/2` (wait not needed as this is async)
+  - `GenServer.cast/2` (wait not needed as this is asynchronous)
   - `GenServer.stop/3`
 
   Will wait a bit if the GenServer is not yet registered on restarts.
@@ -143,8 +143,8 @@ defmodule GenServer.Proxy do
   end
 
   @doc """
-  Sends an async request to the GenServer registered via `server_id`.
-  No need to wait for the GenServer to be registered as this is async.
+  Sends an asynchronous request to the GenServer registered via `server_id`.
+  No need to wait for the GenServer to be registered as this is asynchronous.
 
   The given `module` (or by default `<caller's_module>.GenServerProxy`) should
   implement the 2 callbacks of `GenServer.Proxy` (this module).
