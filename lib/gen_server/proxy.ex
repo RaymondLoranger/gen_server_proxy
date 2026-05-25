@@ -77,6 +77,16 @@ defmodule GenServer.Proxy do
 
   ## Examples
 
+      iex> defmodule Game.Server do
+      iex>   use GenServer
+      iex>
+      iex>   @impl GenServer
+      iex>   def init(init_arg), do: {:ok, init_arg}
+      iex>
+      iex>   @impl GenServer
+      iex>   def handle_call(:summary, _from, state), do: {:reply, state, state}
+      iex> end
+      iex>
       iex> defmodule Game.Engine.GenServerProxy do
       iex>   @behaviour GenServer.Proxy
       iex>
@@ -89,16 +99,6 @@ defmodule GenServer.Proxy do
       iex>   def server_unregistered(game_name) do
       iex>     :ok = IO.puts("Game '#{game_name}' not started.")
       iex>   end
-      iex> end
-      iex>
-      iex> defmodule Game.Server do
-      iex>   use GenServer
-      iex>
-      iex>   @impl GenServer
-      iex>   def init(init_arg), do: {:ok, init_arg}
-      iex>
-      iex>   @impl GenServer
-      iex>   def handle_call(:summary, _from, state), do: {:reply, state, state}
       iex> end
       iex>
       iex> defmodule Game.Engine do
