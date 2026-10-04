@@ -21,7 +21,7 @@ defmodule GenServer.Proxy.MixProject do
 
   defp description do
     """
-    Invokes call, cast or stop with a GenServer registered via a server ID.
+    Invokes functions call, cast or stop targeting a registered GenServer.
     Will wait a bit if the GenServer is not yet registered on restarts.
     """
   end

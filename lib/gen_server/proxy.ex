@@ -1,6 +1,6 @@
 defmodule GenServer.Proxy do
   @moduledoc """
-  Invokes the following functions with a GenServer registered via a server ID:
+  Invokes the following functions targeting a registered GenServer:
 
   - `GenServer.call/3`
   - `GenServer.cast/2` (wait not needed as this is asynchronous)

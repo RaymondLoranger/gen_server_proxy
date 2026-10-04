@@ -47,7 +47,7 @@ defmodule GenServer.ProxyTest do
 
   doctest Proxy
 
-  describe "Proxy.call/2,3" do
+  describe "Proxy.call/3" do
     # ----- "stack1" -----
     test "Fails if server unregistered" do
       call = fn stack_name, request, timeout ->
@@ -105,7 +105,7 @@ defmodule GenServer.ProxyTest do
     end
   end
 
-  describe "Proxy.stop/2,3" do
+  describe "Proxy.stop/3" do
     # ----- "stack5" -----
     test "Fails if server unregistered" do
       stop = fn stack_name, request, timeout ->
