@@ -1,7 +1,7 @@
 defmodule GenServer.Proxy.Log do
   use File.Only.Logger
 
-  warning :failed, {fun, arity, server, timeout, times, reason, env} do
+  warning :failed, {{fun, arity, server, timeout, times, reason}, env} do
     """
     \n'GenServer.#{fun}/#{arity}' failed: server unregistered...
     • Server: #{inspect(server) |> maybe_break(10)}
@@ -12,7 +12,7 @@ defmodule GenServer.Proxy.Log do
     """
   end
 
-  warning :still_unregistered, {server, timeout, times_left, env} do
+  warning :still_unregistered, {{server, timeout, times_left}, env} do
     """
     \nServer still unregistered...
     • Server: #{inspect(server) |> maybe_break(10)}
@@ -22,7 +22,7 @@ defmodule GenServer.Proxy.Log do
     """
   end
 
-  notice :now_registered, {server, timeout, times, pid, env} do
+  notice :now_registered, {{server, timeout, times, pid}, env} do
     """
     \nServer now registered...
     • Server: #{inspect(server) |> maybe_break(10)}
@@ -33,7 +33,7 @@ defmodule GenServer.Proxy.Log do
     """
   end
 
-  error :remains_unregistered, {server, timeout, times, env} do
+  error :remains_unregistered, {{server, timeout, times}, env} do
     """
     \nServer remains unregistered...
     • Server: #{inspect(server) |> maybe_break(10)}

@@ -22,8 +22,8 @@ defmodule GenServer.Proxy.Caller do
       # where mfargs is {GenServer, :call, [server, request, timeout]}.
       # Whatever the reason, we wait, expecting OTP to fix the issue...
       :exit, reason ->
-        failed = {:call, 3, server, @timeout, @times, reason, __ENV__}
-        :ok = Log.warning(:failed, failed)
+        failed = {:call, 3, server, @timeout, @times, reason}
+        :ok = Log.warning(:failed, {failed, __ENV__})
         :ok = Timer.wait(server, server_id, module, @times)
         GenServer.call(server, request, timeout)
     end

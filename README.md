@@ -17,7 +17,7 @@ by adding `gen_server_proxy` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:gen_server_proxy, "~> 0.1.0"}
+    {:gen_server_proxy, "~> 0.1"}
   ]
 end
 ```

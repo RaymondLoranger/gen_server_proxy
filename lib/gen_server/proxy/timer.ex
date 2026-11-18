@@ -26,8 +26,8 @@ defmodule GenServer.Proxy.Timer do
       # process could terminate immediately after it is looked up.
       pid when is_pid(pid) ->
         times = @times - times_left
-        now_registered = {server, @timeout, times, pid, __ENV__}
-        :ok = Log.notice(:now_registered, now_registered)
+        now_registered = {server, @timeout, times, pid}
+        :ok = Log.notice(:now_registered, {now_registered, __ENV__})
 
       nil ->
         log(server, server_id, module, times_left)
@@ -40,12 +40,12 @@ defmodule GenServer.Proxy.Timer do
   @spec log(GenServer.name(), Proxy.server_id(), module, non_neg_integer) :: :ok
   defp log(server, server_id, module, 0) do
     module.server_unregistered(server_id)
-    remains_unregistered = {server, @timeout, @times, __ENV__}
-    :ok = Log.error(:remains_unregistered, remains_unregistered)
+    remains_unregistered = {server, @timeout, @times}
+    :ok = Log.error(:remains_unregistered, {remains_unregistered, __ENV__})
   end
 
   defp log(server, _server_id, _module, times_left) do
-    still_unregistered = {server, @timeout, times_left, __ENV__}
-    :ok = Log.warning(:still_unregistered, still_unregistered)
+    still_unregistered = {server, @timeout, times_left}
+    :ok = Log.warning(:still_unregistered, {still_unregistered, __ENV__})
   end
 end
