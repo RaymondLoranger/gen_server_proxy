@@ -61,7 +61,7 @@ defmodule GenServer.ProxyTest do
       end
 
       capture =
-        fn -> self() |> send(call.("stack1", :pop, 5001)) end
+        fn -> send(self(), call.("stack1", :pop, 5001)) end
         |> CaptureIO.capture_io()
 
       mfargs = {GenServer, :call, [{:global, "stack1"}, :pop, 5001]}
@@ -127,7 +127,7 @@ defmodule GenServer.ProxyTest do
       end
 
       capture =
-        fn -> self() |> send(stop.("stack5", :shutdown, 5001)) end
+        fn -> send(self(), stop.("stack5", :shutdown, 5001)) end
         |> CaptureIO.capture_io()
 
       mfargs = {GenServer, :stop, [{:global, "stack5"}, :shutdown, 5001]}
